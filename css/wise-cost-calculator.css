@@ -1,0 +1,641 @@
+/* ===== CALCULATOR CONTAINER ===== */
+.woocommerce-cost-calculator {
+	background: white;
+	border-radius: 12px;
+	box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+	border: 1px solid #e8e8e8;
+	overflow: hidden;
+	padding: 20px;
+	margin: 20px 0;
+}
+
+.calculator-header {
+	background: linear-gradient(135deg, #4CAF50, #45a049);
+	color: white;
+	padding: 20px;
+	text-align: center;
+}
+
+.calculator-header h2 {
+	margin: 0;
+	font-size: 24px;
+	font-weight: 700;
+}
+
+.calculator-body {
+	padding: 25px;
+}
+
+/* ===== INPUT TABLE STYLING ===== */
+.calculator-inputs table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+	background: #fafafa;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.calculator-inputs th {
+	background: #2c3e50;
+	color: white;
+	padding: 12px 15px;
+	font-weight: 600;
+	font-size: 14px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.calculator-inputs td {
+	padding: 15px !important;
+	background: white;
+	border-bottom: 1px solid #e8e8e8;
+}
+
+.calculator-inputs input[type="number"] {
+	width: 100%;
+	padding: 10px 12px;
+	border: 2px solid #e0e0e0;
+	border-radius: 6px;
+	font-size: 14px;
+	transition: all 0.3s ease;
+	background: white;
+}
+
+.calculator-inputs input[type="number"]:focus {
+	border-color: #4CAF50;
+	box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+	outline: none;
+}
+
+/* ===== TOGGLE SWITCH STYLING ===== */
+.opening-toggle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 15px;
+	padding: 10px;
+}
+
+.toggle-label {
+	font-weight: 600;
+	color: #fff;
+	font-size: 16px;
+}
+
+.toggle-switch {
+	position: relative;
+	display: inline-block;
+	width: 60px;
+	height: 34px;
+}
+
+.toggle-switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.toggle-slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	transition: .4s;
+	border-radius: 34px;
+}
+
+.toggle-slider:before {
+	position: absolute;
+	content: "";
+	height: 26px;
+	width: 26px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	transition: .4s;
+	border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+	background-color: #4CAF50;
+}
+
+input:checked + .toggle-slider:before {
+	transform: translateX(26px);
+}
+
+/* ===== OPENING DIMENSIONS STYLING ===== */
+.opening-dimensions {
+	background: #f8f9fa;
+	transition: all 0.3s ease;
+}
+
+.opening-fields {
+	padding: 15px;
+	text-align: center;
+}
+
+.dimension-inputs {
+	text-align: center;
+}
+
+.dimension-inputs label {
+	display: block;
+	margin-bottom: 10px;
+	font-weight: 600;
+	color: #2c3e50;
+}
+
+.input-group {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+
+.input-group input[type="number"] {
+	width: 100px;
+	padding: 10px;
+	border: 2px solid #e0e0e0;
+	border-radius: 6px;
+	text-align: center;
+	font-size: 14px;
+	transition: all 0.3s ease;
+}
+
+.input-group input[type="number"]:focus {
+	border-color: #4CAF50;
+	box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+	outline: none;
+}
+
+.dimension-separator,
+.dimension-equals {
+	font-size: 18px;
+	font-weight: 700;
+	color: #4CAF50;
+	min-width: 20px;
+	text-align: center;
+}
+
+.opening-area-result {
+	font-weight: 700;
+	color: #2c3e50;
+	font-size: 16px;
+	min-width: 80px;
+	text-align: center;
+	padding: 8px 12px;
+	background: white;
+	border-radius: 6px;
+	border: 2px solid #e0e0e0;
+	white-space: nowrap;
+}
+
+/* ===== AREA SUMMARY STYLING ===== */
+.area-summary {
+	display: flex;
+	justify-content: center;
+	gap: 30px;
+	margin: 20px 0;
+	padding: 20px;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	border-radius: 10px;
+	color: white;
+}
+
+.area-item {
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.area-label {
+	font-size: 14px;
+	font-weight: 600;
+	opacity: 0.9;
+}
+
+.area-value {
+	font-size: 20px;
+	font-weight: 700;
+}
+
+/* ===== DETAILS TABLE STYLING ===== */
+.details-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 20px 0;
+	background: white;
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.details-table th {
+	background: #34495e;
+	color: white;
+	padding: 15px 10px;
+	font-weight: 600;
+	font-size: 12px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+.details-table td {
+	padding: 12px 15px !important;
+	border-bottom: 1px solid #ecf0f1;
+	font-size: 14px;
+}
+
+.details-table tr:last-child td {
+	border-bottom: none;
+	background: #f8f9fa;
+	font-weight: 700;
+	font-size: 16px;
+	color: #2c3e50;
+}
+
+.details-table tr:nth-child(even) {
+	background: #fafafa;
+}
+
+/* ===== ADD TO CART BUTTON ===== */
+.calculator-actions {
+	text-align: center;
+	margin-top: 30px;
+}
+
+#addToCart {
+	background: linear-gradient(135deg, #4CAF50, #45a049);
+	color: white;
+	padding: 18px 40px;
+	font-size: 18px;
+	font-weight: 700;
+	border: none;
+	border-radius: 50px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	float: none !important;
+	display: inline-block;
+	min-width: 200px;
+}
+
+#addToCart:hover:not(:disabled) {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+	background: linear-gradient(135deg, #45a049, #4CAF50);
+}
+
+#addToCart:disabled {
+	background: #95a5a6;
+	cursor: not-allowed;
+	transform: none;
+	box-shadow: none;
+}
+
+/* ===== WALL TYPE SECTION ===== */
+.wall-type-section {
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+	margin-bottom: 25px;
+	border: 1px solid #e0e0e0;
+}
+
+.wall-type-section h4 {
+	color: #2c3e50;
+	font-size: 18px;
+	margin-bottom: 15px;
+	font-weight: 600;
+	border-bottom: 2px solid #4CAF50;
+	padding-bottom: 8px;
+}
+
+.wall-type-variations {
+	display: flex;
+	gap: 15px;
+	flex-wrap: wrap;
+}
+
+.wall-type-option {
+	flex: 1;
+	min-width: 120px;
+	text-align: center;
+	padding: 12px;
+	border: 2px solid #e0e0e0;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	background: white;
+}
+
+.wall-type-option:hover {
+	border-color: #4CAF50;
+	transform: translateY(-2px);
+}
+
+.wall-type-option.active {
+	border-color: #4CAF50;
+	background: #4CAF50;
+	color: white;
+	box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.wall-type-name {
+	font-weight: 600;
+	font-size: 14px;
+	margin-bottom: 5px;
+}
+
+.wall-type-price {
+	font-size: 16px;
+	font-weight: 700;
+	color: #2c3e50;
+}
+
+.wall-type-option.active .wall-type-price {
+	color: white;
+}
+
+/* ===== HIDDEN ELEMENTS ===== */
+.woocommerce-variation.single_variation,
+.quantity,
+.single_add_to_cart_button:not(#addToCart),
+p.price,
+.single-product-category,
+.woocommerce-breadcrumb,
+.product_meta{
+	display: none !important;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes priceUpdate {
+	0% { transform: scale(1); }
+	50% { transform: scale(1.05); }
+	100% { transform: scale(1); }
+}
+
+.price-update {
+	animation: priceUpdate 0.3s ease;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+	.wall-type-variations {
+		flex-direction: column;
+	}
+
+	.calculator-body {
+		padding: 15px;
+	}
+
+	.area-summary {
+		flex-direction: column;
+		gap: 15px;
+	}
+
+	.calculator-inputs table,
+	.details-table {
+		font-size: 12px;
+	}
+
+	.calculator-inputs th,
+	.calculator-inputs td,
+	.details-table th,
+	.details-table td {
+		padding: 8px 10px !important;
+	}
+
+	#addToCart {
+		padding: 15px 30px;
+		font-size: 16px;
+		min-width: 180px;
+	}
+
+	.input-group {
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.dimension-separator,
+	.dimension-equals {
+		transform: rotate(90deg);
+	}
+
+	.input-group input[type="number"] {
+		width: 120px;
+	}
+}
+/* 	Extra styles */
+table.variations {
+	border: none !important;
+}	
+
+/* Temporarily disabling */
+/* #addToCart, */
+.c_calculator_row_braces,
+.wise_temp_hidden {
+	display: none !important;
+}
+/* end */
+.details-table th,
+.details-table tbody tr > td:first-child {
+	white-space: nowrap;
+}
+/* Reolok */
+/* Reolok Shipping Styles */
+.shipping-section {
+    margin: 25px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.shipping-section h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 18px;
+    border-bottom: 2px solid #4CAF50;
+    padding-bottom: 8px;
+}
+
+.shipping-inputs table {
+    width: 100%;
+    margin-bottom: 20px;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.shipping-inputs th, .shipping-inputs td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.shipping-inputs th {
+    background: #34495e;
+    color: white;
+    font-weight: 600;
+    width: 40%;
+}
+
+.shipping-inputs select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.shipping-details {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.shipping-details th, .shipping-details td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.shipping-details th {
+    background: #2c3e50;
+    color: white;
+    font-weight: 600;
+}
+
+.final-summary {
+    margin: 25px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px;
+    color: white;
+}
+
+.final-prices {
+    width: 100%;
+    font-size: 16px;
+}
+
+.final-prices td {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.final-prices tr:last-child td {
+    border-bottom: none;
+}
+
+.final-prices .grand-total {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.final-prices td:first-child {
+    text-align: left;
+}
+
+.final-prices td:last-child {
+    text-align: right;
+    font-weight: 600;
+}
+/* Ensure calculator is properly styled */
+.woocommerce-cost-calculator {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border: 1px solid #e8e8e8;
+    overflow: hidden;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+/* Make sure inputs are visible and working */
+.calculator-inputs input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.calculator-inputs input[type="number"]:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+    outline: none;
+}
+
+/* Shipping row visibility */
+.shipping-row-fullcontainers,
+.shipping-row-skids,
+.shipping-row-metrodeliveries {
+    display: table-row;
+}
+/* SUMMARY */
+.reolok-summary {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f8f8f8;
+    border-radius: 5px;
+    border-left: 4px solid #2271b1;
+}
+
+.reolok-summary h4 {
+    margin: 0 0 10px 0;
+    color: #2271b1;
+    font-size: 14px;
+}
+
+.reolok-summary table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.reolok-summary td {
+    padding: 6px 4px;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.reolok-summary tr:last-child td {
+    border-bottom: none;
+}
+.shop_table_responsive td.product-quantity,
+.shop_table_responsive th.product-quantity{
+    display: none !important;
+}
+/* Readonly the quantity field on cart page */
+.woocommerce-cart-form .product-quantity input.qty {
+	pointer-events: none !important;
+	border: none !important;
+	-moz-appearance: textfield !important;
+	opacity: 0.5 !important;
+	user-select: none !important;
+}
+.woocommerce-cart-form .product-name { width: 50% !important; }
+.woocommerce-cart-form .product-price { width: 25% !important; }
+.woocommerce-cart-form .product-subtotal { width: 25% !important; }
+
+/* Hiding shipping methods, to show only our custom shipping charges */
+.woocommerce-cart #shipping_method,
+.woocommerce-checkout .woocommerce-shipping-totals.shipping {
+	display: none !important;
+}
+
+@media (max-width: 921px){
+	html .woocommerce-cart .cart-collaterals .cart_totals>h2{
+		margin: 0 !important;
+	}
+}
