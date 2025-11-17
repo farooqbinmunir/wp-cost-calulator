@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Cost Calculator</title>
+	<style>
+		.header { text-align: center; }
+		input[type=number]::-webkit-outer-spin-button,
+		input[type=number]::-webkit-inner-spin-button {
+		  -webkit-appearance: none;
+		  margin: 0;
+		}
+		input[type=number] { -moz-appearance: textfield; }
+		table { margin: 0 auto; border-collapse: collapse; }
+		td, th { padding: 6px 10px; text-align: center; border: 1px solid #ddd; }
+		.result-box { text-align: center; margin-top: 20px; font-size: 18px; }
+		.system-selector { text-align: center; margin: 20px 0; }
+		.system-selector button { 
+			padding: 10px 20px; 
+			margin: 0 10px; 
+			cursor: pointer;
+			border: 1px solid #ccc;
+			background: #f5f5f5;
+		}
+		.system-selector button.active { 
+			background: #4CAF50; 
+			color: white;
+			border-color: #4CAF50;
+		}
+		.details-table { margin-top: 20px; }
+		.hidden { display: none; }
+	</style>
+</head>
+<body>
+	<div class="page">
+		<div class="page-wrapper">
+			<header class="header">
+				<h2>Cost Calculator</h2>
+			</header>
+			<main>
+				<section class="calculator">
+					<div class="cwrapper">
+						<div class="system-selector">
+							<button id="eeSystem" class="active">Residential FormPro ICF</button>
+						</div>
+						
+						<div class="cgroup-area">
+							<!-- EE System (ICF) -->
+							<div id="eeCalculator">
+								<table>
+									<thead>
+										<tr>
+											<th>Wall Type</th>
+											<th>Length</th>
+											<th>Height</th>
+											<th>Corners</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<select id="eeWallType">
+													<option value="EE220">EE220</option>
+													<option value="EE270">EE270</option>
+													<option value="EE320" selected>EE320</option>
+												</select>
+											</td>
+											<td><input type="number" id="eeLength" value="50" /></td>
+											<td><input type="number" id="eeHeight" value="2.4" step="0.1" /></td>
+											<td><input type="number" id="eeCorners" value="2" /></td>
+										</tr>
+										<tr>
+											<th colspan="2">Opening m²</th>
+											<td style="text-align: left;">
+												<label><input type="radio" name="eeOpeningEnable" class="eeOpeningRadio" value="yes" /> Yes</label>
+												<label><input type="radio" name="eeOpeningEnable" class="eeOpeningRadio" value="no" checked /> No</label>
+											</td>
+											<td class="optional-opening" style="display: none;"><input type="number" id="eeOpening" value="0" step="0.1" /></td>
+										</tr>
+									</tbody>
+								</table>
+								
+								<div class="result-box">
+									<strong>Total Area: </strong><span id="eeTotalArea">0</span> m²
+								</div>
+								
+								<table class="details-table">
+									<thead>
+										<tr>
+											<th>Item</th>
+											<th>Quantity</th>
+											<th>Unit Price</th>
+											<th>Total</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Block m²</td>
+											<td id="eeBlockM2">0.00</td>
+											<td></td>
+											<td></td>
+										</tr>
+										<tr>
+											<td>Cnr m²</td>
+											<td id="eeCnrM2">0.00</td>
+											<td></td>
+											<td></td>
+										</tr>
+										<tr>
+											<td>Full Blocks</td>
+											<td id="eeFullBlocks">0</td>
+											<td id="eeFullBlocksPrice">$0.00</td>
+											<td id="eeFullBlocksTotal">$0.00</td>
+										</tr>
+										<tr>
+											<td>Cnr Blocks</td>
+											<td id="eeCnrBlocks">0</td>
+											<td id="eeCnrBlocksPrice">$0.00</td>
+											<td id="eeCnrBlocksTotal">$0.00</td>
+										</tr>
+										<tr>
+											<td>C Channel</td>
+											<td id="eeCChannel">0</td>
+											<td id="eeCChannelPrice">$0.00</td>
+											<td id="eeCChannelTotal">$0.00</td>
+										</tr>
+										<tr>
+											<td>Braces</td>
+											<td id="eeBraces">0</td>
+											<td id="eeBracesPrice">$0.00</td>
+											<td id="eeBracesTotal">$0.00</td>
+										</tr>
+										<tr>
+											<td><strong>Total</strong></td>
+											<td colspan="2"></td>
+											<td id="eeSubtotal">$0.00</td>
+										</tr>
+										
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</section>
+			</main>
+		</div>
+	</div>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			// System selection
+			const eeSystemBtn = document.getElementById('eeSystem');
+			const eeCalculator = document.getElementById('eeCalculator');
+			
+			// EE System (ICF) Pricing
+			const eePricing = {
+				EE220: {
+					fullBlocks: 55.46,
+					cnrBlocks: 66.58
+				},
+				EE270: {
+					fullBlocks: 56.12,
+					cnrBlocks: 67.13
+				},
+				EE320: {
+					fullBlocks: 56.78,
+					cnrBlocks: 67.68
+				}
+			};
+			
+			const cChannelPrice = 3.7566666666666664;
+			const bracesPrice = 19.5;
+			const blockWaste = 0.05;
+			
+			// EE System Elements
+			const eeWallType = document.getElementById('eeWallType');
+			const eeLength = document.getElementById('eeLength');
+			const eeHeight = document.getElementById('eeHeight');
+			const eeCorners = document.getElementById('eeCorners');
+			const eeOpening = document.getElementById('eeOpening');
+			
+			// EE Result Elements
+			const eeTotalArea = document.getElementById('eeTotalArea');
+			const eeBlockM2 = document.getElementById('eeBlockM2');
+			const eeCnrM2 = document.getElementById('eeCnrM2');
+			const eeFullBlocks = document.getElementById('eeFullBlocks');
+			const eeFullBlocksPrice = document.getElementById('eeFullBlocksPrice');
+			const eeFullBlocksTotal = document.getElementById('eeFullBlocksTotal');
+			const eeCnrBlocks = document.getElementById('eeCnrBlocks');
+			const eeCnrBlocksPrice = document.getElementById('eeCnrBlocksPrice');
+			const eeCnrBlocksTotal = document.getElementById('eeCnrBlocksTotal');
+			const eeCChannel = document.getElementById('eeCChannel');
+			const eeCChannelPrice = document.getElementById('eeCChannelPrice');
+			const eeCChannelTotal = document.getElementById('eeCChannelTotal');
+			const eeBraces = document.getElementById('eeBraces');
+			const eeBracesPrice = document.getElementById('eeBracesPrice');
+			const eeBracesTotal = document.getElementById('eeBracesTotal');
+			const eeSubtotal = document.getElementById('eeSubtotal');
+			
+			function ceiling(num, significance) {
+				return Math.ceil(num / significance) * significance;
+			}
+			
+			function calculateEESystem() {
+				const wallType = eeWallType.value;
+				const length = parseFloat(eeLength.value) || 0;
+				const height = parseFloat(eeHeight.value) || 0;
+				const corners = parseFloat(eeCorners.value) || 0;
+				const opening = parseFloat(eeOpening.value) || 0;
+				
+				const area = length * height;
+				eeTotalArea.textContent = area.toFixed(2);
+				
+				// Calculate block and corner areas (same as original)
+				const blockM2 = (ceiling(length, 1.2) * ceiling(height, 0.3)) - 
+							   (ceiling(height, 0.6) * 1 * corners) - 
+							   (opening * 0.9);
+				
+				const cnrM2 = ceiling(height, 0.6) * 1.2 * corners;
+				
+				eeBlockM2.textContent = blockM2.toFixed(2);
+				eeCnrM2.textContent = cnrM2.toFixed(2);
+				
+				// Calculate quantities with waste
+				const fullBlocks = Math.ceil((blockM2 / 1.2 / 0.6) * (1 + blockWaste));
+				const cnrBlocks = Math.ceil((cnrM2 / 1.2 / 0.6) * (1 + blockWaste));
+				const cChannel = length;
+				const braces = Math.round(length);
+				
+				eeFullBlocks.textContent = fullBlocks;
+				eeCnrBlocks.textContent = cnrBlocks;
+				eeCChannel.textContent = cChannel.toFixed(0);
+				eeBraces.textContent = braces;
+				
+				// Get prices
+				const fullBlocksPrice = eePricing[wallType].fullBlocks;
+				const cnrBlocksPrice = eePricing[wallType].cnrBlocks;
+				
+				eeFullBlocksPrice.textContent = `$${fullBlocksPrice.toFixed(2)}`;
+				eeCnrBlocksPrice.textContent = `$${cnrBlocksPrice.toFixed(2)}`;
+				eeCChannelPrice.textContent = `$${cChannelPrice.toFixed(2)}`;
+				eeBracesPrice.textContent = `$${bracesPrice.toFixed(2)}`;
+				
+				// Calculate totals
+				const fullBlocksTotal = fullBlocks * fullBlocksPrice;
+				const cnrBlocksTotal = cnrBlocks * cnrBlocksPrice;
+				const cChannelTotal = cChannel * cChannelPrice;
+				const bracesTotal = braces * bracesPrice;
+				
+				eeFullBlocksTotal.textContent = `$${fullBlocksTotal.toFixed(2)}`;
+				eeCnrBlocksTotal.textContent = `$${cnrBlocksTotal.toFixed(2)}`;
+				eeCChannelTotal.textContent = `$${cChannelTotal.toFixed(2)}`;
+				eeBracesTotal.textContent = `$${bracesTotal.toFixed(2)}`;
+				
+				// Calculate final totals
+				const subtotal = fullBlocksTotal + cnrBlocksTotal + cChannelTotal + bracesTotal;
+				eeSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+			}
+			
+			// Event listeners
+			[eeWallType, eeLength, eeHeight, eeCorners, eeOpening].forEach(el => {
+				el.addEventListener('input', calculateEESystem);
+			});
+
+			// Opening radio button functionality
+			document.querySelectorAll('input.eeOpeningRadio').forEach(input => {
+				input.addEventListener('change', function(e){
+					let value = this.value;
+					let openingInputControl = this.closest('tr').querySelector('.optional-opening');
+					
+					if(value === 'yes'){
+						openingInputControl.style.display = 'table-cell';
+					}else if(value === 'no'){
+						// Set opening value to 0
+						eeOpening.value = 0;
+						// Trigger input event manually
+						eeOpening.dispatchEvent(new Event('input', { bubbles: true }));
+						openingInputControl.style.display = 'none';
+					}
+				});
+			});
+
+			// Initial calculations
+			calculateEESystem();
+		});
+	</script>
+</body>
+</html>
